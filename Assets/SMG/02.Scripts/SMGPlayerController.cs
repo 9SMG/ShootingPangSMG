@@ -12,7 +12,7 @@ public class SMGPlayerController : MonoBehaviour
     Gage gage;
 
     bool isDragable = false;
-    public float hitVectorScale = 2f;
+    float hitVectorScale = 11f;
 
     public SMGBullet bullet;
 

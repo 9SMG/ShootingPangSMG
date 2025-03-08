@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SMGExplosion : MonoBehaviour
 {
-    public float range = 4f;
+    float range = 4f;
     public LayerMask targetLayer = -1;  // default Everything
     public string[] targetTags = {"Block"};
 

@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/*
+ * ProjectSetting > Physics2D > bounce Threshold 값을 1(기본값)에서 0.1로 변경
+ * 
+ */
+
 public class SMGBullet : MonoBehaviour
 {
     Rigidbody2D rb;
@@ -9,13 +14,11 @@ public class SMGBullet : MonoBehaviour
 
     [Header("Settings")]
     public Vector2 hitTestPower = new Vector2(1f, 0);
-    public float stopSpeedThreshold;
+    float stopSpeedThreshold = 0.0036f;
 
     [Header("Audio Clips")]
     public AudioClip bounceSfx;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -23,10 +26,14 @@ public class SMGBullet : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //int stack
         if (isStop)
             return;
         // 공 정지 판정 검사
         float currentSpeed = rb.linearVelocity.sqrMagnitude;
+
+        //if (Mathf.Sqrt(rb.linearVelocityY * rb.linearVelocityY) < 1)
+        //    Debug.Log("rb.linearVelocityY: " + Mathf.Sqrt(rb.linearVelocityY * rb.linearVelocityY));
         
         if (currentSpeed < stopSpeedThreshold)
         {

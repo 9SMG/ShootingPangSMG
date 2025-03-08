@@ -19,21 +19,18 @@ public class SMGBullet : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        for(int i = 0; i < 10; i++)
-        {
-            Invoke("HitTest", 7f * i);
-        }
     }
 
     private void FixedUpdate()
     {
-
+        if (isStop)
+            return;
         // 공 정지 판정 검사
         float currentSpeed = rb.linearVelocity.sqrMagnitude;
-        //Debug.Log("currentSpeed: " + currentSpeed);
+        
         if (currentSpeed < stopSpeedThreshold)
         {
+            Debug.Log("currentSpeed: " + currentSpeed);
             rb.linearVelocity = Vector2.zero;
             isStop = true;
         }
@@ -43,9 +40,8 @@ public class SMGBullet : MonoBehaviour
     public void HitBall(Vector2 hit)
     {
         isStop = false;
-        //Vector2 power;
-        //rb.AddForce(hit);
         rb.AddForce(hit, ForceMode2D.Impulse);
+        //rb.AddTorque(hit.x, ForceMode2D.Impulse);
     }
 
     [ContextMenu("HitTest")]
@@ -54,8 +50,17 @@ public class SMGBullet : MonoBehaviour
         HitBall(hitTestPower);
     }
 
+    [ContextMenu("HitTest10times")]
+    void HitTest10times()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Invoke("HitTest", 6f * i);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //PlayOnShot(bounceSfx);
+        SoundsPlayer.Instance.PlaySFX(bounceSfx);
     }
 }

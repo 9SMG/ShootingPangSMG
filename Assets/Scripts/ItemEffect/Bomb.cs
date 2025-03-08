@@ -8,12 +8,4 @@ public class Bomb : MonoBehaviour
     {
         _circleColl.enabled = true;
     }
-    
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.transform.CompareTag("Wall"))
-    //    {
-    //        Debug.Log("Explosion!");
-    //    }
-    //}
 }

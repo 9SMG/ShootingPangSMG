@@ -7,14 +7,7 @@ public class KnockBack : MonoBehaviour
 
     [SerializeField] float pushPower;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Push();
-        }
-    }
-
+    [ContextMenu("Push")]
     //Å¸°Ù ´ç±â±â
     public void Push()
     {

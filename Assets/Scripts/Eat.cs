@@ -9,19 +9,10 @@ public class Eat : MonoBehaviour
     {
         if (collider.transform.CompareTag("Bullet"))
         {
-            GameManager.Instance.GainCoin();
             Destroy(transform.parent.gameObject);
-
+            
+            GameManager.Instance.GainCoin();
             SoundsPlayer.Instance.PlaySFX(sfx);
         }
     }
-
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.transform.CompareTag("Bullet"))
-    //    {
-    //        GameManager.Instance.AddScore(1);
-    //        transform.parent.gameObject.SetActive(false);
-    //    }
-    //}
 }

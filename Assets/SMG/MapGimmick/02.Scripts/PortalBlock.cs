@@ -36,14 +36,26 @@ public class PortalBlock : MonoBehaviour
     {
         if(collision.CompareTag(tagBullet))
         {
-            bool isUsed = masterPortal.FindID(collision.gameObject.GetInstanceID());
+            GameObject _gameObject = collision.gameObject;
+
+            bool isUsed = masterPortal.FindID(_gameObject.GetInstanceID());
 
             if (isUsed == false)
             {
-                masterPortal.AddID(collision.gameObject.GetInstanceID());
+                masterPortal.AddID(_gameObject.GetInstanceID());
+
+                //Trail ¼û±è
+                Debug.Log("Portal OnTriggerEnter2D()");
+                TrailVisible[] trailVisibles = _gameObject.GetComponentsInChildren<TrailVisible>();
+                foreach(TrailVisible trailVislble in trailVisibles)
+                {
+                    trailVislble.SetVisible(false);
+                    trailVislble.SetVisibleTimer(true, 0.1f);
+                }
+
 
                 //À§Ä¡ ÀÌµ¿
-                collision.gameObject.transform.position = OutPortal.transform.position;
+                _gameObject.transform.position = OutPortal.transform.position;
 
                 //Èû ¹æÇâ Á¶Á¤ (º¤ÅÍ È¸Àü)
                 float portalDeg = OutPortal.transform.eulerAngles.z - transform.eulerAngles.z;
@@ -51,12 +63,13 @@ public class PortalBlock : MonoBehaviour
                 float cos = Mathf.Cos(rad);
                 float sin = Mathf.Sin(rad);
 
-                Vector2 velocity = collision.GetComponent<Rigidbody2D>().linearVelocity;
+                Rigidbody2D _rig = collision.GetComponent<Rigidbody2D>();
+                Vector2 velocity = _rig.linearVelocity;
 
                 float x = velocity.x * cos - velocity.y * sin;
                 float y = velocity.x * sin + velocity.y * cos;
 
-                collision.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(x, y);
+                _rig.linearVelocity = new Vector2(x, y);
 
                 SoundsPlayer.Instance.PlaySFX(sfx);
                 #region ¿¡·¯ ÈçÀû

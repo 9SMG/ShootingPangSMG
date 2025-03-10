@@ -47,10 +47,10 @@ public class PortalBlock : MonoBehaviour
                 //Trail ¼û±è
                 Debug.Log("Portal OnTriggerEnter2D()");
                 TrailVisible[] trailVisibles = _gameObject.GetComponentsInChildren<TrailVisible>();
-                foreach(TrailVisible trailVislble in trailVisibles)
+                foreach(TrailVisible trailVisible in trailVisibles)
                 {
-                    trailVislble.SetVisible(false);
-                    trailVislble.SetVisibleTimer(true, 0.1f);
+                    trailVisible.SetVisible(false);
+                    trailVisible.SetVisibleTimer(true, 0.1f);
                 }
 
 

@@ -23,7 +23,7 @@ public class MasterPortal : MonoBehaviour
         
     }
 
-    void ResetIDList()
+    public void ResetIDList()
     {
         inObjectIDList.Clear();
     }

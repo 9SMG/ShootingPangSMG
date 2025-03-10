@@ -15,33 +15,30 @@ public class SMGBullet : MonoBehaviour
     [Header("Audio Clips")]
     public AudioClip bounceSfx;
 
-
-
+    Vector3 startPos;
     Rigidbody2D rb;
     TrailVisible trailVisible;
 
-    float stopSpeedThreshold = 0.0036f;
+    float stopSpeedThreshold = 0.004f;
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         trailVisible = GetComponentInChildren<TrailVisible>();
+        startPos = transform.position;
     }
 
     private void FixedUpdate()
     {
-        //int stack
         if (isStop)
             return;
+        
         // 공 정지 판정 검사
         float currentSpeed = rb.linearVelocity.sqrMagnitude;
 
-        //if (Mathf.Sqrt(rb.linearVelocityY * rb.linearVelocityY) < 1)
-        //    Debug.Log("rb.linearVelocityY: " + Mathf.Sqrt(rb.linearVelocityY * rb.linearVelocityY));
-        
         if (currentSpeed < stopSpeedThreshold)
         {
-            Debug.Log("currentSpeed: " + currentSpeed);
+            //Debug.Log("currentSpeed: " + currentSpeed);
             rb.linearVelocity = Vector2.zero;
             isStop = true;
         }
@@ -54,7 +51,7 @@ public class SMGBullet : MonoBehaviour
         rb.AddForce(hit, ForceMode2D.Impulse);
         //rb.AddTorque(hit.x, ForceMode2D.Impulse);
     }
-    #region ContextMenu HitTest / HitTest10Times
+    #region ContextMenu Function
     [ContextMenu("HitTest")]
     void HitTest()
     {
@@ -69,10 +66,21 @@ public class SMGBullet : MonoBehaviour
             Invoke("HitTest", 6f * i);
         }
     }
+    [ContextMenu("Reset Position")]
+    public void ResetToStartPos()
+    {
+        rb.linearVelocity = Vector2.zero;
+        trailVisible.SetVisible(false);
+        trailVisible.SetVisibleTimer(true, 0.1f);
+        transform.position = startPos;
+    }
     #endregion
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         SoundsPlayer.Instance.PlaySFX(bounceSfx);
     }
+
+    
+
 }

@@ -11,7 +11,7 @@ public class Eat : MonoBehaviour
         {
             Destroy(transform.parent.gameObject);
             
-            GameManager.Instance.GainCoin();
+            //GameManager.Instance.GainCoin();
             SoundsPlayer.Instance.PlaySFX(sfx);
         }
     }

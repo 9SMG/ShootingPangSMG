@@ -18,6 +18,7 @@ public class SMGBullet : MonoBehaviour
     Vector3 startPos;
     Rigidbody2D rb;
     TrailVisible trailVisible;
+    ItemImages itemImages;
 
     float stopSpeedThreshold = 0.004f;
     
@@ -26,6 +27,7 @@ public class SMGBullet : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         trailVisible = GetComponentInChildren<TrailVisible>();
         startPos = transform.position;
+        itemImages = GetComponentInChildren<ItemImages>();
     }
 
     private void FixedUpdate()
@@ -81,6 +83,10 @@ public class SMGBullet : MonoBehaviour
         SoundsPlayer.Instance.PlaySFX(bounceSfx);
     }
 
+    public void SelectItem(Item item)
+    {
+        itemImages.SetItemImage((int)item);
+    }
     
 
 }

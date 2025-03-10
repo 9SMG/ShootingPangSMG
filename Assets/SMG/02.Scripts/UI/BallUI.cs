@@ -5,11 +5,13 @@ public class BallUI : MonoBehaviour
 {
     GameObject objUsed;
     Image imgSelect;
+    ItemImages itemImages;
 
-    void Start()
+    void Awake()
     {
         imgSelect = GetComponent<Image>();
         objUsed = transform.GetChild(transform.childCount - 1).gameObject;
+        itemImages = GetComponentInChildren<ItemImages>();
     }
 
     #region ContextMenu Function
@@ -59,7 +61,7 @@ public class BallUI : MonoBehaviour
     // 선택된 아이템
     public void ShowSelectItem(Item item)
     {
-        //Item
+        itemImages.SetItemImage((int)item);
     }
     // 
 }

@@ -122,19 +122,19 @@ public class BulletController : MonoBehaviour
 
             if (isStarted && rb.linearVelocity == Vector2.zero && !isDestroyed)
             {
-                switch (PlayerController.Instance.selectedItem)
+                switch ((Item)PlayerController.Instance.selectedItem)
                 {
-                    case 0:
+                    case Item.Bomb:
                         GetComponent<Bomb>().UseBomb();
                         itemParticles[0].SetActive(true);
                         SoundsPlayer.Instance.PlaySFX(bombSfx, 0.8f, 1f);
                         break;
-                    case 1:
+                    case Item.Magnet:
                         GetComponent<Magnetic>().Pull();
                         itemParticles[1].SetActive(true);
                         SoundsPlayer.Instance.PlaySFX(magneticSfx);
                         break;
-                    case 2:
+                    case Item.KnockBack:
                         GetComponent<KnockBack>().Push();
                         itemParticles[2].SetActive(true);
                         SoundsPlayer.Instance.PlaySFX(knockBackSfx);

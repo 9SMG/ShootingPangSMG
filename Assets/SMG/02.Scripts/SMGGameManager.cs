@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
 using UnityEngine;
 
 public class SMGGameManager : MonoBehaviour
@@ -143,4 +143,8 @@ public class SMGGameManager : MonoBehaviour
         return isDragable;
     }
 
+    public void PostItemToBullet(Item item)
+    {
+        MyBullet.SelectItem(item);
+    }
 }

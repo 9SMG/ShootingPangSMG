@@ -7,7 +7,7 @@ public class ItemImages : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log(transform.childCount);
+        //Debug.Log(transform.childCount);
         for(int i = 0; i < transform.childCount; i++)
         {
             items.Add(transform.GetChild(i).gameObject);
@@ -40,7 +40,7 @@ public class ItemImages : MonoBehaviour
     }
     #endregion
 
-    void SetItemImage(int item)
+    public void SetItemImage(int item)
     {
         for(int i = 0; i < items.Count; i++)
         {

@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 571d0a598ceac9742a97f64b188b9208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  items: 05000000020000000200000002000000
+  items: 02000000020000000500000002000000
   numCoin: 1
   numBullet: 10
   playerPosition: {x: -7, y: -3, z: 0}

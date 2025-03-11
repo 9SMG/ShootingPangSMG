@@ -33,8 +33,8 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1874126853126391382}
   - {fileID: 2980766200171863103}
+  - {fileID: 1874126853126391382}
   - {fileID: 2603353696816676660}
   m_Father: {fileID: 7456460169801554551}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -347,7 +347,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7f7b827a62f70d408a02530ae5c3e5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStop: 0
+  isStop: 1
+  isEnd: 1
   hitTestPower: {x: 1, y: 0}
   bounceSfx: {fileID: 8300000, guid: 87632691685be9e41b71667b04bbf16b, type: 3}
 --- !u!114 &5730920872032127210
@@ -357,7 +358,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8284370865437931382}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 666b52ffcdf978b4f812b5d047612535, type: 3}
   m_Name: 

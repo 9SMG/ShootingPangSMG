@@ -1,28 +1,31 @@
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class BallBag : MonoBehaviour
 {
     BallUI[] balls;
     int currIdx;
 
-    private void Start()
+    private void Awake()
     {
         balls = GetComponentsInChildren<BallUI>();
-        currIdx = 0;
+    }
+    private void Start()
+    {
+        //currIdx = 0;
         ResetEnableBall(10);
     }
 
     public void ResetEnableBall(int count)
     {
+        currIdx = 0;
         for (int i = 0; i <balls.Length; i++)
         {
             balls[i].SetUsed(false);
             balls[i].SetSelect(false);
-            balls[currIdx].ShowSelectItem(Item.NoItem);
+            balls[i].ShowSelectItem(Item.NoItem);
             balls[i].gameObject.SetActive(i < count ? true : false);
         }
-        balls[0].SetSelect(false);
+        balls[0].SetSelect(true);
     }
 
     public void SetCurrBallItem(Item item)

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 //using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
@@ -11,10 +12,16 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI stageNumberText;
     public TextMeshProUGUI targetCoinText;
 
-    //List<ItemPicker> itemPikers = new List<ItemPicker>();
-    //[SerializeField]
     ItemPicker[] itemPickers;
     BallBag ballBag;
+
+
+    [Header("Stage Canvas")]
+    public GameObject ResultPanel;
+    public TextMeshProUGUI textHeader;
+    public Button buttonNextStage;
+    public Button buttonRetry;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -27,31 +34,42 @@ public class UIManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
         }
-    }
 
-    int[] itemCounts = {2, 3, 4};
-    private void Start()
-    {
         itemPickers = uiCanvas.GetComponentsInChildren<ItemPicker>();
         ballBag = uiCanvas.GetComponentInChildren<BallBag>();
+    }
 
+    private void Start()
+    {
         for(int i = 0; i < itemPickers.Length; i++)
         {
-            //itemPickers[i].pickButton.onClick.AddListener(() => ClickItemPick(i));
-            itemPickers[i].SetCount(itemCounts[i]);
+        //    //itemPickers[i].pickButton.onClick.AddListener(() => ClickItemPick(i));
             itemPickers[i].SetItem((Item)i);
         }
     }
 
+    public void HideResultPanel()
+    {
+        ResultPanel.SetActive(false);
+    }
+
+    public void ShowResultPanel(string header, bool hasNextStage)
+    {
+        ResultPanel.SetActive(true);
+        textHeader.text = header;
+        buttonNextStage.gameObject.SetActive(hasNextStage);
+    }
 
     public void ClickNextStage()
     {
-
+        HideResultPanel();
+        SMGGameManager.Instance.ResetNextStage();
     }
 
     public void ClickRetry()
     {
-
+        HideResultPanel();
+        SMGGameManager.Instance.ResetCurrStage();
     }
 
     public void ClickBackToMain()
@@ -74,9 +92,8 @@ public class UIManager : MonoBehaviour
 
         ItemPick((Item)item);
         SetCurrentBallState((Item)item);
-        //SMGGameManager.Instance.PostItemToBullet((Item)item);
+        SMGGameManager.Instance.PostItemToBullet((Item)item);
     }
-
 
     public void SetStageNumber(int main, int sub)
     {
@@ -93,19 +110,29 @@ public class UIManager : MonoBehaviour
         ballBag.SetCurrBallItem(item);
     }
 
+    public void OnBallUsed(int usedItem, int nowCount)
+    {
+        if (usedItem >= 0)
+            itemPickers[usedItem].SetCount(nowCount);
+        ballBag.SetNextBall();
+    }
+
     [ContextMenu("TestShoot")]
     void TestShoot()
     {
-        //Game Manger
-        //Item selectItem = Item.Bomb;
-        if(selectItem >= 0)
-            itemPickers[selectItem].SetCount(--itemCounts[selectItem]);
-        //itemPickers[(int)item]
-        //picker
-        //ballbag
-        ballBag.SetNextBall();
-        selectItem = -1;
+        //if(selectItem >= 0)
+        //    itemPickers[selectItem].SetCount(--itemCounts[selectItem]);
+        //ballBag.SetNextBall();
+        //selectItem = -1;
     }
 
+    public void SetEnableBall(int cnt)
+    {
+        ballBag.ResetEnableBall(cnt);
+    }
 
+    public void SetItemCnt(int item, int cnt)
+    {
+        itemPickers[item].SetCount(cnt);
+    }
 }

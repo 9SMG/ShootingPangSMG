@@ -8,6 +8,7 @@ public class SMGBullet : MonoBehaviour
 {
     [Header("State")]
     public bool isStop = true;
+    public bool isUsed = true;
 
     [Header("Test Settings")]
     public Vector2 hitTestPower = new Vector2(1f, 0);
@@ -20,18 +21,39 @@ public class SMGBullet : MonoBehaviour
     TrailVisible trailVisible;
     ItemImages itemImages;
 
+    //Item
+    Magnetic magnetic;
+    KnockBack knockBack;
+    SMGExplosion smgExplosion;
+
+    Item selectItemNum;
+
     float stopSpeedThreshold = 0.004f;
-    
+
+    private void Awake()
+    {
+        magnetic = GetComponent<Magnetic>();
+        knockBack = GetComponent<KnockBack>();
+        smgExplosion = GetComponent<SMGExplosion>();
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         trailVisible = GetComponentInChildren<TrailVisible>();
         startPos = transform.position;
         itemImages = GetComponentInChildren<ItemImages>();
+        
     }
 
     private void FixedUpdate()
     {
+        if(!isUsed)
+        {
+            activeTime -= Time.fixedDeltaTime;
+            if (activeTime <= 0)
+                isUsed = true;
+        }
         if (isStop)
             return;
         
@@ -40,9 +62,11 @@ public class SMGBullet : MonoBehaviour
 
         if (currentSpeed < stopSpeedThreshold)
         {
-            //Debug.Log("currentSpeed: " + currentSpeed);
+            Debug.Log("currentSpeed: " + currentSpeed);
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
             isStop = true;
+            UseItem();
         }
     }
 
@@ -71,12 +95,22 @@ public class SMGBullet : MonoBehaviour
     [ContextMenu("Reset Position")]
     public void ResetToStartPos()
     {
-        rb.linearVelocity = Vector2.zero;
         trailVisible.SetVisible(false);
         trailVisible.SetVisibleTimer(true, 0.1f);
+        //trailVisible.SetVisible(false);
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
         transform.position = startPos;
+        //trailVisible.SetVisible(true);
+        SelectItem(Item.NoItem);
     }
     #endregion
+
+    public void SetStartPos(Vector3 pos)
+    {
+        startPos = pos;
+        SMGPlayerController.Instance.transform.position = pos;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -85,8 +119,31 @@ public class SMGBullet : MonoBehaviour
 
     public void SelectItem(Item item)
     {
-        itemImages.SetItemImage((int)item);
+        selectItemNum = item;
+        itemImages.SetItemImage((int)selectItemNum);
     }
-    
 
+    float activeTime;
+    public void UseItem()
+    {
+        switch(selectItemNum)
+        {
+            case Item.Bomb:
+                activeTime = 0.5f;
+                smgExplosion.Explosion();
+                break;
+            case Item.KnockBack:
+                activeTime = 0.5f;
+                knockBack.Push();
+                break;
+            case Item.Magnet:
+                activeTime = 2.5f;
+                magnetic.Pull();
+                break;
+            default:
+                activeTime = 0f;
+                break;
+        }
+        isUsed = false;
+    }
 }

@@ -14,9 +14,10 @@ public class SMGExplosion : MonoBehaviour
         gameObjectID = gameObject.GetInstanceID();
     }
 
-    [ContextMenu("Exploion")]
-    public void Exploion()
+    [ContextMenu("Explosion")]
+    public void Explosion()
     {
+        Debug.Log("call SMGExplosion.Explosion()");
         // 대상 레이어 충돌 체크
         Collider2D[] colls = Physics2D.OverlapCircleAll(transform.position, range, targetLayer, minDepthZ);
 
@@ -42,9 +43,9 @@ public class SMGExplosion : MonoBehaviour
                 if (!isTargetTag)
                     continue;
             }
-
-            // 파괴 실행
-            Destroy(_coll.gameObject);
+            if(_coll.GetComponent<Rigidbody2D>() != null)
+                // 파괴 실행
+                Destroy(_coll.gameObject);
         }
     }
 }

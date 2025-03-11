@@ -1,35 +1,27 @@
-//using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class SMGGameManager : MonoBehaviour
 {
     public static SMGGameManager Instance;
     public SMGBullet MyBullet;
 
-    StageSettings stage;
+    public StageSettings[] stages;
+    int currStagesIdx;
 
-    int currBallCount;
+    
 
     bool isShooting;
-    bool isDragable;
+    bool isDragable = true;
 
-    //public bool isDragable
-    //{
-    //    get
-    //    {
-    //        return isDragable;
-    //    }
-
-    //    private set
-    //    {
-    //        isDragable = value;
-    //    }
-    //}
-
-    //public SMGGameManager()
-    //{
-    //    this.isDragable = true;
-    //}
+    Item selectedItem;
+    
+    int[] itemCnt = new int[4];
+    int targetCoinCnt;
+    int currBallCnt;
+    Vector3 startPos;
+    int cameraSize;
 
     private void Awake()
     {
@@ -43,6 +35,22 @@ public class SMGGameManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
         }
+        SceneManager.LoadScene("UI", LoadSceneMode.Additive);
+    }
+
+    public bool AllBallUsed
+    {
+        // 모든 공이 끝났는가?
+        get
+        {
+            foreach(GameObject _bullet in GameObject.FindGameObjectsWithTag(TagManager.tagBullet))
+            {
+                if (_bullet.GetComponent<SMGBullet>().isUsed == false)
+                    return false;
+            }
+
+            return true;
+        }
     }
 
     public bool AllBallStop
@@ -50,7 +58,7 @@ public class SMGGameManager : MonoBehaviour
         // 모든 공이 멈췄는가?
         get
         {
-            foreach(GameObject _bullet in GameObject.FindGameObjectsWithTag(TagManager.tagBullet))
+            foreach (GameObject _bullet in GameObject.FindGameObjectsWithTag(TagManager.tagBullet))
             {
                 if (_bullet.GetComponent<SMGBullet>().isStop == false)
                     return false;
@@ -64,48 +72,96 @@ public class SMGGameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        stage = GameObject.Find("Stage0").GetComponent<StageSettings>();
+        selectedItem = Item.NoItem;
 
-        currBallCount = 5;
+
+
+        Invoke("InitStart", 0.2f);
     }
 
-    float TestDeltaTime;
-    // Update is called once per frame
+    void InitStart()
+    {
+        ResetStage(0);
+    }
+
+    void ResetStage(int idx)
+    {
+        if (!(idx >= 0 && idx < stages.Length))
+            return;
+        currStagesIdx = idx;
+
+        // Active Stage Object
+        for (int i = 0; i < stages.Length; i++)
+        {
+            stages[i].gameObject.SetActive((i == currStagesIdx));
+        }
+
+        // Get Stage Setting
+        for(int i = 0; i < 4; i++)
+        {
+            itemCnt[i] = stages[currStagesIdx].GetItemCount(i);
+        }
+
+        currBallCnt = stages[currStagesIdx].GetBulletNum();
+        startPos = stages[currStagesIdx].GetStartPos();
+        Camera.main.orthographicSize = stages[currStagesIdx].GetCameraSize();
+
+        MyBullet.SetStartPos(startPos);
+        MyBullet.ResetToStartPos();
+
+
+        UIManager.Instance.SetEnableBall(currBallCnt);
+        UIManager.Instance.SetTargetCoinCount(GetRemainingCoinCount());
+        for (int i = 0; i < 3; i++)
+        {
+            UIManager.Instance.SetItemCnt(i, itemCnt[i]);
+        }
+    }
+
+    public void ResetCurrStage()
+    {
+        ResetStage(currStagesIdx);
+    }
+    public void ResetNextStage()
+    {
+        ResetStage(++currStagesIdx);
+    }
+
+
     void Update()
     {
         if(GetRemainingCoinCount() == 0)
         {
             //Debug.Log("Game Clear");
-            isDragable = false;
+            //isDragable = false;
+            //ResetStage(++currStagesIdx);
+            //ResetNextStage();
+            UIManager.Instance.ShowResultPanel("Stage Clear", (currStagesIdx + 1 < stages.Length));
         }
 
-        //TestDeltaTime += Time.deltaTime;
-        //if(TestDeltaTime >5f)
-        //{
-        //    TestDeltaTime = 0f;
-        //    isDragable = !isDragable;
-        //}
-
         // 모든 공이 멈췄을 때, 공 카운트를 하나 줄이고 시작위치에 공 배치
-        if (isShooting && AllBallStop)
+        if (isShooting && AllBallStop && AllBallUsed)
         {
             isShooting = false;
-            currBallCount--;
+
 
             // 남은 공이 없을 때
-            if(currBallCount == 0)
+            if (currBallCnt == 0)
             {
-                Debug.Log("Game Over");
+                //Debug.Log("Game Over");
+                UIManager.Instance.ShowResultPanel("Game Over", false);
             }
-
-
-            // 시작 공 배치
-            MyBullet.ResetToStartPos();
-
-            //포탈 초기화
-            foreach(MasterPortal _PortalMaster in stage.GetComponentsInChildren<MasterPortal>())
+            else
             {
-                _PortalMaster.ResetIDList();
+                // 시작 공 배치
+                MyBullet.ResetToStartPos();
+                //포탈 초기화
+                foreach (MasterPortal _PortalMaster in stages[currStagesIdx].GetComponentsInChildren<MasterPortal>())
+                {
+                    _PortalMaster.ResetIDList();
+                }
+
+                isDragable = true;
             }
         }
     }
@@ -122,20 +178,27 @@ public class SMGGameManager : MonoBehaviour
     // 스테이지 내, 남은 코인 갯수
     int GetRemainingCoinCount()
     {
-        Coin[] remaingCoins = stage.GetComponentsInChildren<Coin>();
+        Coin[] remaingCoins = stages[currStagesIdx].GetComponentsInChildren<Coin>();
         return remaingCoins.Length;
     }
 
     // 남은 공 갯수
     int GetRemainingBallCount()
     {
-        return currBallCount;
+        return currBallCnt;
     }
 
     public void HitBullet(Vector2 hit)
     {
+        isDragable = false;
         MyBullet.HitBall(hit);
         isShooting = true;
+        currBallCnt--;
+        if (!((int)selectedItem < 0 || (int)selectedItem > 2))
+        {
+            itemCnt[(int)selectedItem]--;
+            UIManager.Instance.OnBallUsed((int)selectedItem, itemCnt[(int)selectedItem]);
+        }
     }
 
     public bool GetDragable()
@@ -145,6 +208,7 @@ public class SMGGameManager : MonoBehaviour
 
     public void PostItemToBullet(Item item)
     {
-        MyBullet.SelectItem(item);
+        selectedItem = item;
+        MyBullet.SelectItem(selectedItem);
     }
 }

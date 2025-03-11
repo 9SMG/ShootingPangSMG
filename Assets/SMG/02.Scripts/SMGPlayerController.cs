@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /*
  * 화면을 좌클릭했을 때, 발사 준비
@@ -11,12 +13,28 @@ using UnityEngine;
 
 public class SMGPlayerController : MonoBehaviour
 {
+    public static SMGPlayerController Instance;
+
     Gage gage;    
     Vector2 mouseButtonDownPos;
     
-    float hitVectorScale = 11f;
+    float hitVectorScale = 10f;
     bool isDraging = false;
+    bool mouseHoverUI;
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+    }
     void Start()
     {
         gage = GetComponentInChildren<Gage>();
@@ -25,7 +43,7 @@ public class SMGPlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SMGGameManager.Instance.GetDragable())
+        if (!SMGGameManager.Instance.GetDragable())
         {
             if (isDraging)
             {
@@ -34,22 +52,24 @@ public class SMGPlayerController : MonoBehaviour
             }
             return;
         }
-            
-        if(Input.GetMouseButtonDown(0) && !isDraging)
+        mouseHoverUI = EventSystem.current.IsPointerOverGameObject();
+
+        if (Input.GetMouseButtonDown(0) && !isDraging && !mouseHoverUI)
         {
             isDraging = true;
             mouseButtonDownPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-        else if(Input.GetMouseButtonUp(0) && isDraging)
+        else if (Input.GetMouseButtonUp(0) && isDraging)
         {
             isDraging = false;
             HitBullet();
         }
 
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
             isDraging = false;
         }
+        
 
         DragGage(isDraging);
     }

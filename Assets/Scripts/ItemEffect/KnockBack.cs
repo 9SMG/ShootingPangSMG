@@ -11,6 +11,7 @@ public class KnockBack : MonoBehaviour
     //타겟 당기기
     public void Push()
     {
+        Debug.Log("Call KnockBack.Push()");
         //스캔된 오브젝트들
         RaycastHit2D[] targets2D = Physics2D.CircleCastAll(transform.position, radius, Vector2.up, 0, layerMask);
 

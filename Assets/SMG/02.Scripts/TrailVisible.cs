@@ -36,6 +36,8 @@ public class TrailVisible : MonoBehaviour
     public void SetVisible(bool visible)
     {
         hasBeenSet = true;
+        //GetComponent<TrailRenderer>().enabled = visible;
+
         if (visible)
         {
             if (trailOldTime > 0)
@@ -43,10 +45,11 @@ public class TrailVisible : MonoBehaviour
         }
         else
         {
-            if(trail.time > 0)
+            if (trail.time > 0)
                 trailOldTime = trail.time;
             trail.time = 0f;
         }
+
     }
 
     public void SetVisibleTimer(bool visible, float delayTime, bool hasNext = false)

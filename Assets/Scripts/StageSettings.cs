@@ -21,7 +21,7 @@ public class StageSettings : MonoBehaviour
 
     private void Awake()
     {
-        SetStage();
+        //SetStage();
     }
 
     private void SetStage()
@@ -50,6 +50,10 @@ public class StageSettings : MonoBehaviour
         Camera.main.orthographicSize = cameraSize;
     }
 
+    public int GetItemCount(int item)
+    {
+        return items[item];
+    }
     public int GetCoinNum()
     {
         return numCoin;
@@ -58,5 +62,15 @@ public class StageSettings : MonoBehaviour
     public int GetBulletNum()
     {
         return numBullet;
+    }
+
+    public Vector3 GetStartPos()
+    {
+        return playerPosition;
+    }
+
+    public int GetCameraSize()
+    {
+        return cameraSize;
     }
 }

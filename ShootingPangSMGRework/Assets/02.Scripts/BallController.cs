@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    Gage gage;
+
     [Header("State")]
     public bool isStop = true;
     public bool isUsed = true;
@@ -13,6 +15,7 @@ public class BallController : MonoBehaviour
 
     Vector3 startPos;
     Rigidbody2D rb;
+    [SerializeField]
     TrailVisible trailVisible;
     ItemImages itemImages;
 
@@ -29,6 +32,26 @@ public class BallController : MonoBehaviour
     [Header("Test Settings")]
     public Vector2 hitTestPower = new Vector2(1f, 0);
 
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        trailVisible = GetComponentInChildren<TrailVisible>();
+        itemImages = GetComponentInChildren<ItemImages>();
+        gage = GetComponentInChildren<Gage>();
+    }
+
+    private void Start()
+    {
+        startPos = transform.position;
+
+        if (IsNearStopSpeed())
+        {
+            StopCompletely();
+        }
+        isUsed = true;
+    }
+
+
     private void FixedUpdate()
     {
         if (!isUsed)
@@ -41,17 +64,26 @@ public class BallController : MonoBehaviour
             return;
 
         // 공 정지 판정 검사
-        float currentSpeed = rb.linearVelocity.sqrMagnitude;
-
-        if (currentSpeed < stopSpeedThreshold)
+        if (IsNearStopSpeed())
         {
-            Debug.Log("currentSpeed: " + currentSpeed);
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-            isStop = true;
+            Debug.Log("Stop ball [currentSpeed: " + rb.linearVelocity.sqrMagnitude + "]");
+            StopCompletely();
             //UseItem();
         }
     }
+
+    bool IsNearStopSpeed()
+    {
+        return rb.linearVelocity.sqrMagnitude < stopSpeedThreshold;
+    }
+
+    void StopCompletely()
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        isStop = true;
+    }
+
     public void HitBall(Vector2 hit)
     {
         isStop = false;
@@ -87,7 +119,18 @@ public class BallController : MonoBehaviour
         SoundManager.Instance.PlaySFX(bounceSfx);
     }
 
-    #region ContextMenu Function
+    [ContextMenu("Reset Position")]
+    public void ResetToStartPos()
+    {
+        trailVisible.SetVisible(false);
+        trailVisible.SetVisibleTimer(true, 0.1f);
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        transform.position = startPos;
+        //SelectItem(-1);// Item.NoItem);
+    }
+
+    #region Only ContextMenu Function
     [ContextMenu("HitTest")]
     void HitTest()
     {
@@ -103,15 +146,6 @@ public class BallController : MonoBehaviour
         }
     }
 
-    [ContextMenu("Reset Position")]
-    public void ResetToStartPos()
-    {
-        trailVisible.SetVisible(false);
-        trailVisible.SetVisibleTimer(true, 0.1f);
-        rb.linearVelocity = Vector2.zero;
-        rb.angularVelocity = 0f;
-        transform.position = startPos;
-        //SelectItem(-1);// Item.NoItem);
-    }
+    
     #endregion
 }

@@ -32,8 +32,7 @@ public class GrapplingHook : MonoBehaviour
         distJoint.enabled = false;
     }
 
-    
-    // Update is called once per frame
+
     void Update()
     {
         if (GameManager.Instance.GetDragable())
@@ -44,7 +43,6 @@ public class GrapplingHook : MonoBehaviour
 
             return;
         }
-        
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseCorsorTr.position = (Vector2)mousePos;
 
@@ -54,7 +52,7 @@ public class GrapplingHook : MonoBehaviour
 
         lineRenderer.SetPosition(1, localHitPoint);
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             distJoint.enabled = true;
             distJoint.connectedAnchor = hit.point;
@@ -63,8 +61,8 @@ public class GrapplingHook : MonoBehaviour
             lineRenderer.enabled = false;
             orginDamping = parentRb.linearDamping;
             parentRb.linearDamping = 0f;
-        }    
-        if(Input.GetMouseButtonUp(0))
+        }
+        if (Input.GetMouseButtonUp(0))
         {
             distJoint.enabled = false;
 
@@ -74,7 +72,6 @@ public class GrapplingHook : MonoBehaviour
         }
     }
 
-    float dampingDelayDelta;
     private void FixedUpdate()
     {
         if (Input.GetMouseButton(0))
@@ -82,7 +79,7 @@ public class GrapplingHook : MonoBehaviour
             float deg1 = Vector2.Angle(new Vector2(localHitPoint.y, -localHitPoint.x), parentRb.linearVelocity);
             float deg2 = Vector2.Angle(new Vector2(-localHitPoint.y, localHitPoint.x), parentRb.linearVelocity);
 
-            if(deg1 < deg2)
+            if (deg1 < deg2)
             {
                 parentRb.linearVelocity = new Vector2(localHitPoint.y, -localHitPoint.x).normalized * parentRb.linearVelocity.magnitude;
             }

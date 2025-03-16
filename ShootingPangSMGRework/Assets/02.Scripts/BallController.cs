@@ -15,7 +15,7 @@ public class BallController : MonoBehaviour
         }
     }
 
-    float stopSpeedThreshold = 0.004f;
+    float stopSpeedThreshold = 0.008f;
 
     [Header("Audio Clips")]
     public AudioClip bounceSfx;
@@ -76,9 +76,8 @@ public class BallController : MonoBehaviour
         if (IsNearStopSpeed())
         {
             stopDeltaTime += Time.deltaTime;
-            if(stopDeltaTime > 10f)
+            if(stopDeltaTime > 0.5f)
             {
-                Debug.Log("Stop ball [currentSpeed: " + rb.linearVelocity.sqrMagnitude + "]");
                 StopCompletely();
                 UseItem();
             }

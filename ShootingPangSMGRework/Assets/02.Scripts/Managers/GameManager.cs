@@ -103,6 +103,11 @@ public class GameManager : MonoBehaviour
             {
                 // 시작 공 배치
                 playerBall.ResetToStartPos();
+
+                foreach (GrapableBlock grapableBlock in FindObjectsByType<GrapableBlock>(FindObjectsSortMode.None))
+                {
+                    grapableBlock.RespawnBlock();
+                }
                 //포탈 초기화
                 //foreach (MasterPortal _PortalMaster in stages[currStagesIdx].GetComponentsInChildren<MasterPortal>())
                 //{

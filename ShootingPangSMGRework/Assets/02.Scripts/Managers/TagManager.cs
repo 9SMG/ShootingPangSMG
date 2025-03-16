@@ -6,3 +6,9 @@ class TagManager
     public static string tagCoin = "Coin";
 
 }
+
+class LayerManager
+{
+    public static string layerWall = "Wall";
+    public static string layerCoin = "Coin";
+}

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ChainArmAbility : BallAbility
 {
+    GrapableBlock grapableBlock;
+
     LineRenderer lineRenderer;
     DistanceJoint2D distJoint;
 
@@ -18,6 +20,7 @@ public class ChainArmAbility : BallAbility
     Vector2 anchorPos, localAnchorPos;
 
     Color aimColor = new Color(0f, 0.9f, 1f);
+    Color grapDashColor = new Color(0f, 0.9f, 1f);
     Color chainColor = new Color(0.45f, 0.45f, 0.45f);
 
     int rayLayerMask;
@@ -58,14 +61,16 @@ public class ChainArmAbility : BallAbility
         mouseDir = mousePos - transform.position;
         localAnchorPos = transform.InverseTransformPoint(anchorPos);
 
+        float rayDist = 50f;
+        hit = Physics2D.Raycast(transform.position, mouseDir, rayDist, rayLayerMask);
+
         if (Input.GetMouseButtonDown(0))
         {
-            float rayDist = 50f;
-            hit = Physics2D.Raycast(transform.position, mouseDir, rayDist, rayLayerMask);
             if(hit)
             {
                 active = true;
-                if(!hit.transform.CompareTag(TagManager.tagGrapplingAble))
+                //if(!hit.transform.CompareTag(TagManager.tagGrapplingAble))
+                if (hit.transform.GetComponent<GrapableBlock>() == null)
                 {
                     StartSwing();
                 }
@@ -166,6 +171,9 @@ public class ChainArmAbility : BallAbility
             //grapCol = hit.collider;
             //grapCol.enabled = false;
 
+            grapableBlock = hit.transform.GetComponent<GrapableBlock>();
+            grapableBlock.GrapedChain();
+
             transform.parent.position = hit.transform.position;
             parentRb.linearVelocity = Vector2.zero;
         }
@@ -182,6 +190,7 @@ public class ChainArmAbility : BallAbility
             //parentRb.linearVelocity = dir.normalized * 40f;
 
             //grapCol.enabled = true;
+            grapableBlock.BreakBlock();
         }
     }
     
@@ -191,7 +200,6 @@ public class ChainArmAbility : BallAbility
         {
             if(isSwing)
             {
-                //lineRenderer.SetPosition(1, transform.InverseTransformPoint(anchorPos));
                 lineRenderer.SetPosition(1, localAnchorPos);
 
                 // Color
@@ -204,25 +212,40 @@ public class ChainArmAbility : BallAbility
                     fullAlphaColor.a = 1f;
                     lineRenderer.endColor = fullAlphaColor;
                 }
+                return;
             }
             else if(isGrap)
             {
-                //Vector2 dir = mousePos - transform.position;
-                //lineRenderer.SetPosition(1, dir.normalized);
                 lineRenderer.SetPosition(1, mouseDir.normalized);   // Gage를 쓰는것도
 
                 // Color
                 {
-                    Color fullAlphaColor = aimColor;
+                    Color fullAlphaColor = grapDashColor;
                     fullAlphaColor.a = 1f;
                     lineRenderer.startColor = fullAlphaColor;
 
-                    fullAlphaColor = aimColor;
+                    fullAlphaColor = grapDashColor;
                     fullAlphaColor.a = 1f;
                     lineRenderer.endColor = fullAlphaColor;
                 }
+
+                return;
             }
-            
         }
+        if(hit)
+        {
+            lineRenderer.SetPosition(1, transform.InverseTransformPoint(hit.point));
+            // Color
+            {
+                Color semiAlphaColor = aimColor;
+                semiAlphaColor.a = 0.4f;
+                lineRenderer.startColor = semiAlphaColor;
+
+                semiAlphaColor = aimColor;
+                semiAlphaColor.a = 0.4f;
+                lineRenderer.endColor = semiAlphaColor;
+            }
+        }
+        
     }
 }

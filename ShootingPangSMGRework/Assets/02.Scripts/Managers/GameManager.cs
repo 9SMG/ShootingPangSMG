@@ -57,6 +57,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public  bool AllBallEnd
+    {
+        get
+        {
+            foreach (GameObject _bullet in GameObject.FindGameObjectsWithTag(TagManager.tagBall))
+            {
+                if (_bullet.GetComponent<BallController>().isUsed == false)
+                    return false;
+            }
+
+            return true;
+        }
+    }
+
+
     void Update()
     {
         if (false)//GetRemainingCoinCount() == 0)

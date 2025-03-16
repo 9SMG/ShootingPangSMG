@@ -7,6 +7,13 @@ public class BallController : MonoBehaviour
     [Header("State")]
     public bool isStop = true;
     public bool isUsed = true;
+    public bool isEnd
+    {
+        get
+        {
+            return isStop && isUsed && !ability.isActive;
+        }
+    }
 
     float stopSpeedThreshold = 0.004f;
 
@@ -15,7 +22,6 @@ public class BallController : MonoBehaviour
 
     Vector3 startPos;
     Rigidbody2D rb;
-    [SerializeField]
     TrailVisible trailVisible;
     ItemImages itemImages;
 
@@ -25,6 +31,8 @@ public class BallController : MonoBehaviour
     //SMGExplosion smgExplosion;
 
     //int selectItemNum;
+
+    BallAbility ability;
 
     float activeTime;
 
@@ -40,6 +48,7 @@ public class BallController : MonoBehaviour
         gage = GetComponentInChildren<Gage>();
     }
 
+    float stopDeltaTime;
     private void Start()
     {
         startPos = transform.position;
@@ -66,9 +75,13 @@ public class BallController : MonoBehaviour
         // 공 정지 판정 검사
         if (IsNearStopSpeed())
         {
-            Debug.Log("Stop ball [currentSpeed: " + rb.linearVelocity.sqrMagnitude + "]");
-            StopCompletely();
-            //UseItem();
+            stopDeltaTime += Time.deltaTime;
+            if(stopDeltaTime > 10f)
+            {
+                Debug.Log("Stop ball [currentSpeed: " + rb.linearVelocity.sqrMagnitude + "]");
+                StopCompletely();
+                UseItem();
+            }
         }
     }
 
@@ -86,6 +99,7 @@ public class BallController : MonoBehaviour
 
     public void HitBall(Vector2 hit)
     {
+        stopDeltaTime = 0f;
         isStop = false;
         rb.AddForce(hit, ForceMode2D.Impulse);
         //rb.AddTorque(hit.x, ForceMode2D.Impulse);

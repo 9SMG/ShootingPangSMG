@@ -120,4 +120,9 @@ public class GrapDash : BallAbility
         //}
 
     }
+
+    public override void StopAbility()
+    {
+        //throw new System.NotImplementedException();
+    }
 }

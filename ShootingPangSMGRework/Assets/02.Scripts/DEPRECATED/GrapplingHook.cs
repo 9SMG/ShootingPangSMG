@@ -163,4 +163,9 @@ public class GrapplingHook : BallAbility
         //}
             
     }
+
+    public override void StopAbility()
+    {
+        //throw new System.NotImplementedException();
+    }
 }

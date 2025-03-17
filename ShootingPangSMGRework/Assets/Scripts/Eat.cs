@@ -7,12 +7,12 @@ public class Eat : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.transform.CompareTag("Bullet"))
+        if (collider.transform.CompareTag(TagManager.tagBall))
         {
             Destroy(transform.parent.gameObject);
             
             //GameManager.Instance.GainCoin();
-            SoundsPlayer.Instance.PlaySFX(sfx);
+            SoundManager.Instance.PlaySFX(sfx);
         }
     }
 }

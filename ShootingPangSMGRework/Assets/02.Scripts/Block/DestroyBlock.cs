@@ -11,11 +11,12 @@ public class DestroyBlock : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag(TagManager.tagCoin))
+        if(collision.CompareTag(TagManager.tagBall))
         {
             float playSFXTime = 1f;
-            SoundsPlayer.Instance.PlaySFX(sfx, 0.8f ,playSFXTime);
+            SoundManager.Instance.PlaySFX(sfx, 0.8f ,playSFXTime);
 
+            collision.GetComponent<BallController>().BallDie();
             //collision.gameObject.GetComponent<BulletController>().isDestroyed = true;
         }
     }

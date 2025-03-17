@@ -248,4 +248,12 @@ public class ChainArmAbility : BallAbility
         }
         
     }
+
+    public override void StopAbility()
+    {
+        Debug.Log("Stop Ability()");
+        active = false;
+        EndSwing();
+        EndGrapDash();
+    }
 }

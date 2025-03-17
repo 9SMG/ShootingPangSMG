@@ -46,6 +46,8 @@ public class BallController : MonoBehaviour
         trailVisible = GetComponentInChildren<TrailVisible>();
         itemImages = GetComponentInChildren<ItemImages>();
         gage = GetComponentInChildren<Gage>();
+
+        ability = GetComponentInChildren<BallAbility>();
     }
 
     float stopDeltaTime;
@@ -141,6 +143,22 @@ public class BallController : MonoBehaviour
         rb.angularVelocity = 0f;
         transform.position = startPos;
         //SelectItem(-1);// Item.NoItem);
+    }
+
+    public void SetStartPos(Vector3 pos)
+    {
+        startPos = pos;
+    }
+
+
+    public void BallDie()
+    {
+        Debug.Log("BallDie()");
+        ability.StopAbility();
+        isUsed = true; 
+        StopCompletely();
+                
+        //ResetToStartPos();
     }
 
     #region Only ContextMenu Function

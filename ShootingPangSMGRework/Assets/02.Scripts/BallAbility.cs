@@ -7,4 +7,6 @@ public abstract class BallAbility : MonoBehaviour
     {
         get { return active; }
     }
+
+    public abstract void StopAbility();
 }

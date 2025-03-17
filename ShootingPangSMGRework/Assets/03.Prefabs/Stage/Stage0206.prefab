@@ -89,7 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items: 00000000000000000000000000000000
   numCoin: 1
-  numBullet: 100
+  numBullet: 10
   playerPosition: {x: -7, y: 3, z: 0}
   cameraSize: 5
 --- !u!1001 &939140805053173929

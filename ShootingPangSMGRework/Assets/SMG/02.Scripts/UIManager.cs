@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI textHeader;
     public Button buttonNextStage;
     public Button buttonRetry;
+    public Button buttonReturnToStart;
 
     private void Awake()
     {
@@ -53,11 +54,18 @@ public class UIManager : MonoBehaviour
         ResultPanel.SetActive(false);
     }
 
-    public void ShowResultPanel(string header, bool hasNextStage)
+    public void ShowResultPanel(string header, bool hasNextStage, bool isEnded = false)
     {
         ResultPanel.SetActive(true);
         textHeader.text = header;
         buttonNextStage.gameObject.SetActive(hasNextStage);
+        if(isEnded)
+        {
+            textHeader.text = "Stage All Clear!!!";
+            buttonReturnToStart.gameObject.SetActive(true);
+        }
+        else
+            buttonReturnToStart.gameObject.SetActive(false);
     }
 
     public void ClickNextStage()
@@ -74,7 +82,8 @@ public class UIManager : MonoBehaviour
 
     public void ClickBackToMain()
     {
-
+        HideResultPanel();
+        GameManager.Instance.ResetFirstState();
     }
 
     void ItemPick(int item)//Item item)

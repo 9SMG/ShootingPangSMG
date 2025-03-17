@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
         if (GetRemainingCoinCount() == 0)
         {
 #if USE_UI
-            UIManager.Instance.ShowResultPanel("Stage Clear", (currStagesIdx + 1 < stages.Length));
+            UIManager.Instance.ShowResultPanel("Stage Clear", (currStagesIdx + 1 < stages.Length), currStagesIdx + 1 == stages.Length);
 #else
             Debug.Log("Game Clear");
             //isDragable = false;
@@ -194,6 +194,11 @@ public class GameManager : MonoBehaviour
     public void ResetCurrStage()
     {
         ResetStage(currStagesIdx);
+    }
+
+    public void ResetFirstState()
+    {
+        ResetStage(0);
     }
 
     public bool GetDragable()

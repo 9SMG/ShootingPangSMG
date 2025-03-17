@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     // Stage
     public StageSettings[] stages;
-    [SerializeField]
     StageSettings instanceStage;
     Vector3 startPos;
     int currStagesIdx = 0;
@@ -18,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     bool isShooting;
     bool isDragable = true;
+    bool isAgainDrag = false;
 
     
 
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
 
 
             // 남은 공이 없을 때
-            if (currBallCnt == 0)
+            if (currBallCnt <= 0)
             {
 #if USE_UI
                 UIManager.Instance.ShowResultPanel("Game Over", false);
@@ -200,6 +200,19 @@ public class GameManager : MonoBehaviour
     {
         return isDragable;
     }
+
+    public void AgainDrag() // GrapDash
+    {
+        isShooting = false;
+        isDragable = true;
+        isAgainDrag = true;
+    }
+
+    public bool GetAgainDrag()
+    {
+        return isAgainDrag;
+    }
+
     int GetRemainingCoinCount()
     {
         Coin[] remaingCoins = instanceStage.GetComponentsInChildren<Coin>();//stages[currStagesIdx].GetComponentsInChildren<Coin>();
@@ -211,7 +224,13 @@ public class GameManager : MonoBehaviour
         isDragable = false;
         playerBall.HitBall(hit);
         isShooting = true;
-        currBallCnt--;
+        if (isAgainDrag)
+        {
+            playerBall.StopAbilities();
+            isAgainDrag = false;
+        }
+        else
+            currBallCnt--;
 //        if (!((int)selectedItem < 0 || (int)selectedItem > 2))
 //        {
 //            itemCnt[(int)selectedItem]--;

@@ -172,15 +172,17 @@ public class ChainArmAbility : BallAbility
         {
             isGrap = true;
 
-            //grapCol = hit.collider;
-            //grapCol.enabled = false;
-
             grapableBlock = hit.transform.GetComponent<GrapableBlock>();
             grapableBlock.GrapedChain();
 
             transform.parent.position = hit.transform.position;
             parentRb.linearVelocity = Vector2.zero;
+            GameManager.Instance.AgainDrag();
         }
+    }
+    public void CallBreakGrapedBlock()
+    {
+        grapableBlock.BreakBlock();
     }
 
     public void EndGrapDash()
@@ -190,10 +192,7 @@ public class ChainArmAbility : BallAbility
         {
             isGrap = false;
 
-            transform.parent.GetComponent<BallController>().HitBall(mouseDir.normalized * dashPower);
-            //parentRb.linearVelocity = dir.normalized * 40f;
-
-            //grapCol.enabled = true;
+            //transform.parent.GetComponent<BallController>().HitBall(mouseDir.normalized * dashPower);
             grapableBlock.BreakBlock();
         }
     }
@@ -219,20 +218,19 @@ public class ChainArmAbility : BallAbility
                 return;
             }
             else if(isGrap)
-            {
-                lineRenderer.SetPosition(1, mouseDir.normalized);   // Gage를 쓰는것도
+            {   
+                //lineRenderer.SetPosition(1, mouseDir.normalized);   // Gage를 쓰는것도
 
-                // Color
-                {
-                    Color fullAlphaColor = grapDashColor;
-                    fullAlphaColor.a = 1f;
-                    lineRenderer.startColor = fullAlphaColor;
+                //// Color
+                //{
+                //    Color fullAlphaColor = grapDashColor;
+                //    fullAlphaColor.a = 1f;
+                //    lineRenderer.startColor = fullAlphaColor;
 
-                    fullAlphaColor = grapDashColor;
-                    fullAlphaColor.a = 1f;
-                    lineRenderer.endColor = fullAlphaColor;
-                }
-
+                //    fullAlphaColor = grapDashColor;
+                //    fullAlphaColor.a = 1f;
+                //    lineRenderer.endColor = fullAlphaColor;
+                //}
                 return;
             }
         }

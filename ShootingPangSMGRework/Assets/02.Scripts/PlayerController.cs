@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
         mouseHoverUI = EventSystem.current.IsPointerOverGameObject();
         //mouseHoverUI = false;
 
-        if (Input.GetMouseButtonDown(0) && !isDraging && !mouseHoverUI)
+        if ((Input.GetMouseButtonDown(0)|| GameManager.Instance.GetAgainDrag()) && !isDraging && !mouseHoverUI)
         {
             isDraging = true;
             mouseButtonDownPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

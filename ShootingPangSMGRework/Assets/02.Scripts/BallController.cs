@@ -150,6 +150,10 @@ public class BallController : MonoBehaviour
         startPos = pos;
     }
 
+    public void StopAbilities()
+    {
+        ability.StopAbility();
+    }
 
     public void BallDie()
     {

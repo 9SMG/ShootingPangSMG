@@ -142,6 +142,7 @@ public class BallController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         transform.position = startPos;
+        StopAbilities();
         //SelectItem(-1);// Item.NoItem);
     }
 

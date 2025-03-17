@@ -176,8 +176,8 @@ public class GameManager : MonoBehaviour
         isDragable = true;
 
 #if USE_UI
-        //UIManager.Instance.SetEnableBall(currBallCnt);
-        //UIManager.Instance.SetTargetCoinCount(GetRemainingCoinCount());
+        UIManager.Instance.SetEnableBall(currBallCnt);
+        UIManager.Instance.SetTargetCoinCount(GetRemainingCoinCount());
         //for (int i = 0; i < 3; i++)
         //{
         //    UIManager.Instance.SetItemCnt(i, itemCnt[i]);
@@ -230,7 +230,11 @@ public class GameManager : MonoBehaviour
             isAgainDrag = false;
         }
         else
+        {
             currBallCnt--;
+            UIManager.Instance.OnBallUsed(-1, 0);
+        }
+            
 //        if (!((int)selectedItem < 0 || (int)selectedItem > 2))
 //        {
 //            itemCnt[(int)selectedItem]--;

@@ -12,7 +12,7 @@ public class BallBag : MonoBehaviour
     private void Start()
     {
         //currIdx = 0;
-        ResetEnableBall(10);
+        //ResetEnableBall(10);
     }
 
     public void ResetEnableBall(int count)

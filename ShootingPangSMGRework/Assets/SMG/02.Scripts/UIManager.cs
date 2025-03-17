@@ -112,8 +112,8 @@ public class UIManager : MonoBehaviour
 
     public void OnBallUsed(int usedItem, int nowCount)
     {
-        if (usedItem >= 0)
-            itemPickers[usedItem].SetCount(nowCount);
+        //if (usedItem >= 0)
+        //    itemPickers[usedItem].SetCount(nowCount);
         ballBag.SetNextBall();
     }
 

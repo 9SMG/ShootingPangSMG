@@ -63,13 +63,13 @@ public class UIManager : MonoBehaviour
     public void ClickNextStage()
     {
         HideResultPanel();
-        SMGGameManager.Instance.ResetNextStage();
+        GameManager.Instance.ResetNextStage();
     }
 
     public void ClickRetry()
     {
         HideResultPanel();
-        SMGGameManager.Instance.ResetCurrStage();
+        GameManager.Instance.ResetCurrStage();
     }
 
     public void ClickBackToMain()

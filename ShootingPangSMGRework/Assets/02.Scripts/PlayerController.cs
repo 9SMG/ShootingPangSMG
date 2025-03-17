@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -31,7 +32,8 @@ public class PlayerController : MonoBehaviour
             }
             return;
         }
-        mouseHoverUI = false;
+        mouseHoverUI = EventSystem.current.IsPointerOverGameObject();
+        //mouseHoverUI = false;
 
         if (Input.GetMouseButtonDown(0) && !isDraging && !mouseHoverUI)
         {

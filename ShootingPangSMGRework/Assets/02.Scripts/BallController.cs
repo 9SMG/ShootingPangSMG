@@ -153,7 +153,7 @@ public class BallController : MonoBehaviour
 
     public void BallDie()
     {
-        Debug.Log("BallDie()");
+        //Debug.Log("BallDie()");
         ability.StopAbility();
         isUsed = true; 
         StopCompletely();

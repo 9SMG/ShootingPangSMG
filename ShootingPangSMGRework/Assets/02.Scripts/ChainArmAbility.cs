@@ -2,6 +2,7 @@
 
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ChainArmAbility : BallAbility
 {
@@ -56,6 +57,9 @@ public class ChainArmAbility : BallAbility
             return;
         }
 #endif
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
 
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseDir = mousePos - transform.position;
@@ -116,16 +120,16 @@ public class ChainArmAbility : BallAbility
 
             //col.enabled = true;
 
-            Vector2 tangent_a = new Vector2(localAnchorPos.y, -localAnchorPos.x);
-            Vector2 tangent_b = new Vector2(-localAnchorPos.y, localAnchorPos.x);
-            if (Vector2.Angle(tangent_a, rb.linearVelocity) < Vector2.Angle(tangent_b, rb.linearVelocity))
-            {
-                rb.linearVelocity = tangent_a.normalized * rb.linearVelocity.magnitude;
-            }
-            else
-            {
-                rb.linearVelocity = tangent_b.normalized * rb.linearVelocity.magnitude;
-            }
+            //Vector2 tangent_a = new Vector2(localAnchorPos.y, -localAnchorPos.x);
+            //Vector2 tangent_b = new Vector2(-localAnchorPos.y, localAnchorPos.x);
+            //if (Vector2.Angle(tangent_a, rb.linearVelocity) < Vector2.Angle(tangent_b, rb.linearVelocity))
+            //{
+            //    rb.linearVelocity = tangent_a.normalized * rb.linearVelocity.magnitude;
+            //}
+            //else
+            //{
+            //    rb.linearVelocity = tangent_b.normalized * rb.linearVelocity.magnitude;
+            //}
         }
     }
 
@@ -251,7 +255,7 @@ public class ChainArmAbility : BallAbility
 
     public override void StopAbility()
     {
-        Debug.Log("Stop Ability()");
+        //Debug.Log("Stop Ability()");
         active = false;
         EndSwing();
         EndGrapDash();

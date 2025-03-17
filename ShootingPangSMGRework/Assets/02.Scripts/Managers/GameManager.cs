@@ -1,4 +1,6 @@
+#define USE_UI
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class GameManager : MonoBehaviour
 
     // Stage
     public StageSettings[] stages;
+    [SerializeField]
+    StageSettings instanceStage;
     Vector3 startPos;
     int currStagesIdx = 0;
     int currBallCnt;
@@ -92,14 +96,17 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (instanceStage == null)
+            return;
         if (GetRemainingCoinCount() == 0)
         {
+#if USE_UI
+            UIManager.Instance.ShowResultPanel("Stage Clear", (currStagesIdx + 1 < stages.Length));
+#else
             Debug.Log("Game Clear");
             //isDragable = false;
             //ResetStage(++currStagesIdx);
             ResetNextStage();
-#if USE_UI
-            UIManager.Instance.ShowResultPanel("Stage Clear", (currStagesIdx + 1 < stages.Length));
 #endif
         }
         // 모든 공이 멈췄을 때, 공 카운트를 하나 줄이고 시작위치에 공 배치
@@ -119,7 +126,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Ball End, Ball Reset");
+                //Debug.Log("Ball End, Ball Reset");
                 // 시작 공 배치
                 playerBall.ResetToStartPos();
 
@@ -145,31 +152,36 @@ public class GameManager : MonoBehaviour
         currStagesIdx = idx;
 
         // Active Stage Object
-        for (int i = 0; i < stages.Length; i++)
-        {
-            stages[i].gameObject.SetActive((i == currStagesIdx));
-        }
+        //for (int i = 0; i < stages.Length; i++)
+        //{
+        //    stages[i].gameObject.SetActive((i == currStagesIdx));
+        //}
+        if (instanceStage != null)
+            Destroy(instanceStage.gameObject);
+        instanceStage = Instantiate(stages[currStagesIdx]);
 
         // Get Stage Setting
-        for (int i = 0; i < 4; i++)
-        {
-            //itemCnt[i] = stages[currStagesIdx].GetItemCount(i);
-        }
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    //itemCnt[i] = stages[currStagesIdx].GetItemCount(i);
+        //}
 
-        currBallCnt = stages[currStagesIdx].GetBulletNum();
-        startPos = stages[currStagesIdx].GetStartPos();
-        Camera.main.orthographicSize = stages[currStagesIdx].GetCameraSize();
+        currBallCnt = instanceStage.GetBulletNum();// stages[currStagesIdx].GetBulletNum();
+        startPos = instanceStage.GetStartPos();// stages[currStagesIdx].GetStartPos();
+        Camera.main.orthographicSize = instanceStage.GetCameraSize();//stages[currStagesIdx].GetCameraSize();
 
         playerBall.SetStartPos(startPos);
         playerBall.ResetToStartPos();
 
+        isDragable = true;
+
 #if USE_UI
-        UIManager.Instance.SetEnableBall(currBallCnt);
-        UIManager.Instance.SetTargetCoinCount(GetRemainingCoinCount());
-        for (int i = 0; i < 3; i++)
-        {
-            UIManager.Instance.SetItemCnt(i, itemCnt[i]);
-        }
+        //UIManager.Instance.SetEnableBall(currBallCnt);
+        //UIManager.Instance.SetTargetCoinCount(GetRemainingCoinCount());
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    UIManager.Instance.SetItemCnt(i, itemCnt[i]);
+        //}
 #endif
     }
 
@@ -179,13 +191,18 @@ public class GameManager : MonoBehaviour
         ResetStage(++currStagesIdx);
     }
 
+    public void ResetCurrStage()
+    {
+        ResetStage(currStagesIdx);
+    }
+
     public bool GetDragable()
     {
         return isDragable;
     }
     int GetRemainingCoinCount()
     {
-        Coin[] remaingCoins = stages[currStagesIdx].GetComponentsInChildren<Coin>();
+        Coin[] remaingCoins = instanceStage.GetComponentsInChildren<Coin>();//stages[currStagesIdx].GetComponentsInChildren<Coin>();
         return remaingCoins.Length;
     }
 

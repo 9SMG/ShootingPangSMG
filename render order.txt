@@ -1,0 +1,9 @@
+> render order
+Gage			8
+BulletItem		7
+Bullet			6
+BulletTrail		4
+StartPos		2
+BlockInside		1
+Block			0
+BackGround	-1

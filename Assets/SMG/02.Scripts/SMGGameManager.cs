@@ -1,5 +1,3 @@
-//#define USE_UI 
-
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -37,9 +35,7 @@ public class SMGGameManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
         }
-#if USE_UI
         SceneManager.LoadScene("UI", LoadSceneMode.Additive);
-#endif
     }
 
     public bool AllBallUsed
@@ -113,14 +109,13 @@ public class SMGGameManager : MonoBehaviour
         MyBullet.SetStartPos(startPos);
         MyBullet.ResetToStartPos();
 
-#if USE_UI
+
         UIManager.Instance.SetEnableBall(currBallCnt);
         UIManager.Instance.SetTargetCoinCount(GetRemainingCoinCount());
         for (int i = 0; i < 3; i++)
         {
             UIManager.Instance.SetItemCnt(i, itemCnt[i]);
         }
-#endif
     }
 
     public void ResetCurrStage()
@@ -141,9 +136,7 @@ public class SMGGameManager : MonoBehaviour
             //isDragable = false;
             //ResetStage(++currStagesIdx);
             //ResetNextStage();
-#if USE_UI
             UIManager.Instance.ShowResultPanel("Stage Clear", (currStagesIdx + 1 < stages.Length));
-#endif
         }
 
         // 모든 공이 멈췄을 때, 공 카운트를 하나 줄이고 시작위치에 공 배치
@@ -155,11 +148,8 @@ public class SMGGameManager : MonoBehaviour
             // 남은 공이 없을 때
             if (currBallCnt == 0)
             {
-#if USE_UI
+                //Debug.Log("Game Over");
                 UIManager.Instance.ShowResultPanel("Game Over", false);
-#else
-                Debug.Log("Game Over");
-#endif
             }
             else
             {
@@ -207,9 +197,7 @@ public class SMGGameManager : MonoBehaviour
         if (!((int)selectedItem < 0 || (int)selectedItem > 2))
         {
             itemCnt[(int)selectedItem]--;
-#if USE_UI
             UIManager.Instance.OnBallUsed((int)selectedItem, itemCnt[(int)selectedItem]);
-#endif
         }
     }
 

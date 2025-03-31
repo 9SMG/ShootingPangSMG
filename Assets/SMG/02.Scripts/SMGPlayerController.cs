@@ -11,12 +11,8 @@ using UnityEngine.SceneManagement;
 
 
 
-
-
 public class SMGPlayerController : MonoBehaviour
 {
-
-
     public static SMGPlayerController Instance;
 
     Gage gage;    
@@ -56,11 +52,7 @@ public class SMGPlayerController : MonoBehaviour
             }
             return;
         }
-#if USE_UI
         mouseHoverUI = EventSystem.current.IsPointerOverGameObject();
-#else
-        mouseHoverUI = false;
-#endif
 
         if (Input.GetMouseButtonDown(0) && !isDraging && !mouseHoverUI)
         {
